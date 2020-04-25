@@ -32,8 +32,8 @@
 </template>
 
 <script>
-import VueJsonPretty from "vue-json-pretty";
-import { mapState, mapGetters } from "vuex";
+import VueJsonPretty from 'vue-json-pretty'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -44,28 +44,28 @@ export default {
       jobList: state => state.jobs.all,
       loading: state => state.jobs.loading
     }),
-    ...mapGetters("jobs", {
-      stateFilters: "jobStateList"
+    ...mapGetters('jobs', {
+      stateFilters: 'jobStateList'
     })
   },
-  created() {
-    this.$store.dispatch("jobs/getAllJobs");
+  created () {
+    this.$store.dispatch('jobs/getAllJobs')
   },
   methods: {
-    filterTag(value, row) {
-      return row.state === value;
+    filterTag (value, row) {
+      return row.state === value
     },
-    onSelectionChanged(newRow) {
-      const table = this.$refs.dataTable;
-      table.toggleRowExpansion(newRow);
-      table.setCurrentRow();
+    onSelectionChanged (newRow) {
+      const table = this.$refs.dataTable
+      table.toggleRowExpansion(newRow)
+      table.setCurrentRow()
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/style/mixin.scss";
+@import "@/assets/css/mixin.scss";
 
 .job-page__title {
   @include page-title-font;

@@ -11,30 +11,30 @@
 </template>
 
 <script>
-import Header from "@/layout/Header.vue";
-import SideBar from "@/layout/SideBar.vue";
-import auth from "@/utils/auth";
+import Header from '@/components/layout/Header.vue'
+import SideBar from '@/components/layout/SideBar.vue'
+import auth from '@/utils/auth'
 
 export default {
-  data() {
+  data () {
     return {
-      status: ""
-    };
+      status: ''
+    }
   },
   components: {
     Header,
     SideBar
   },
-  created() {
-    if (auth.isLogin()) this.$router.push("/appid");
+  created () {
+    if (auth.isLogin()) this.$router.push('/appid')
   }
-};
+}
 </script>
 
 <style lang="scss">
-@import "@/style/mixin.scss";
-@import "@/style/reset.scss";
-@import "@/style/element-custom.scss";
+@import "@/assets/css/mixin.scss";
+@import "@/assets/css/reset.scss";
+@import "@/assets/css/element-custom.scss";
 
 $backgroud-color: #f8fafc;
 

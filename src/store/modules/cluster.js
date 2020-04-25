@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import * as types from '../mutation-types'
 import { Message } from 'element-ui'
-import { getClusterDetailApi, getClusterListByQueryApi } from '@/http/api'
+import { getClusterDetailApi, getClusterListByQueryApi } from '@/utils/api'
 
 // initial state
 const state = {
@@ -29,7 +29,7 @@ const actions = {
       })
       commit(types.SAVE_CLUSTER_INFO, data)
     } catch ({ error }) {
-      Message.error(`获取失败：${error}`)
+      Message.error(`Fali to get cluster detail: ${error}`)
     }
     commit(types.SAVE_CLUSTER_DETAIL_LOADING, false)
   },
@@ -44,7 +44,7 @@ const actions = {
       })
       commit(types.SAVE_CLUSTER_BY_QUERY, items)
     } catch ({ error }) {
-      Message.error(`获取失败：${error}`)
+      Message.error(`Fali to get cluster result: ${error}`)
     }
     commit(types.SAVE_CLUSTER_DETAIL_LOADING, false)
   }

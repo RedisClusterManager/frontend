@@ -230,110 +230,110 @@ import {
   patchInstanceWeightApi,
   deleteClusterApi,
   restartInstanceApi
-} from "@/http/api";
-import GROUP_MAP from "@/constants/GROUP";
-import { mapstatus } from "vuex";
+} from '@/utils/api'
+import GROUP_MAP from '@/constants/GROUP'
+import { mapState } from 'vuex'
 
 // mapGetters
 export default {
-  data() {
+  data () {
     return {
       GROUP_MAP,
       multipleSelection: [],
       statusMap: {
-        running: "success",
-        waiting: "warning",
-        error: "danger"
+        running: 'success',
+        waiting: 'warning',
+        error: 'danger'
       },
       timer: null,
       deleteClusterDialogVisible: false,
       confirmClusterName: null
-    };
+    }
   },
   computed: {
-    ...mapstatus({
+    ...mapState({
       clusterData: status => status.clusters.clusterDetail,
       loading: status => status.clusters.loading
     })
   },
-  created() {
-    this.getClusterData();
+  created () {
+    this.getClusterData()
   },
   methods: {
-    updateInstance(value, index) {
-      this.$store.dispatch("clusters/updateInstance", {
-        changeType: "value",
+    updateInstance (value, index) {
+      this.$store.dispatch('clusters/updateInstance', {
+        changeType: 'value',
         index,
         weightValue: value
-      });
+      })
     },
-    async getClusterData() {
-      if (!this.$route.params.name) return;
-      this.$store.dispatch("clusters/getClusterDetail", {
+    async getClusterData () {
+      if (!this.$route.params.name) return
+      this.$store.dispatch('clusters/getClusterDetail', {
         name: this.$route.params.name
-      });
-      if (this.clusterData.status === "waiting") {
+      })
+      if (this.clusterData.status === 'waiting') {
         this.timer = setTimeout(() => {
-          this.getClusterData();
-        }, 5000);
+          this.getClusterData()
+        }, 5000)
       }
     },
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
+    handleSelectionChange (val) {
+      this.multipleSelection = val
     },
-    editInstanceWeight(item, index) {
-      this.$store.dispatch("clusters/updateInstance", {
-        changeType: "display",
+    editInstanceWeight (item, index) {
+      this.$store.dispatch('clusters/updateInstance', {
+        changeType: 'display',
         index,
         item,
-        newType: "edit"
-      });
+        newType: 'edit'
+      })
     },
-    async saveInstanceWeight(item, index) {
-      this.$store.dispatch("clusters/getClusterDetail", {
+    async saveInstanceWeight (item, index) {
+      this.$store.dispatch('clusters/getClusterDetail', {
         name: this.$route.params.name
-      });
-      const { weightInfo, ip, port } = item;
+      })
+      const { weightInfo, ip, port } = item
       try {
         await patchInstanceWeightApi(this.clusterData.name, `${ip}:${port}`, {
           weight: Number(weightInfo.value)
-        });
-        this.$store.dispatch("clusters/updateInstance", {
+        })
+        this.$store.dispatch('clusters/updateInstance', {
           index,
           item,
-          newType: "view"
-        });
-        this.$message.success("Successfully modified");
-        this.getClusterData();
+          newType: 'view'
+        })
+        this.$message.success('Successfully modified')
+        this.getClusterData()
       } catch ({ error }) {
-        this.$message.error(error);
+        this.$message.error(error)
       }
     },
-    async confirmDeleteCluster() {
+    async confirmDeleteCluster () {
       try {
-        await deleteClusterApi(this.confirmClusterName);
-        this.$message.success("Successfully deleted");
-        this.$router.back();
+        await deleteClusterApi(this.confirmClusterName)
+        this.$message.success('Successfully deleted')
+        this.$router.back()
       } catch ({ error }) {
-        this.$message.error(`Failed to delete: ${error}`);
+        this.$message.error(`Failed to delete: ${error}`)
       }
     },
-    async restartInstance({ ip, port }) {
+    async restartInstance ({ ip, port }) {
       try {
-        await restartInstanceApi(this.clusterData.name, `${ip}:${port}`);
-        this.$message.success("Successful restart");
+        await restartInstanceApi(this.clusterData.name, `${ip}:${port}`)
+        this.$message.success('Successful restart')
       } catch ({ error }) {
-        this.$message.error(`Failed to restart: ${error}`);
+        this.$message.error(`Failed to restart: ${error}`)
       }
     }
   },
-  beforeRouteLeave(to, from, next) {
+  beforeRouteLeave (to, from, next) {
     if (this.timer) {
-      clearInterval(this.timer);
+      clearInterval(this.timer)
     }
-    next();
+    next()
   }
-};
+}
 </script>
 
 <style lang="scss">

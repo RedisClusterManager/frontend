@@ -123,83 +123,83 @@
 </template>
 
 <script>
-import { getVersionsApi, createClusterApi, getAppidsApi } from "@/http/api";
+import { getVersionsApi, createClusterApi, getAppidsApi } from '@/utils/api'
 import {
   TYPE_OPTIONS,
   SPEC_OPTIONS,
   GROUP_OPTIONS
-} from "@/constants/CREATE_TYPES";
+} from '@/constants/CREATE_TYPES'
 
 export default {
-  data() {
+  data () {
     const checkName = (rule, value, callback) => {
       if (!value) {
-        callback(new Error("Please enter a name"));
+        callback(new Error('Please enter a name'))
       }
       if (!/^\w+$/.test(value)) {
         callback(
           new Error(
-            "Only English characters, numbers and underscores_ are supported"
+            'Only English characters, numbers and underscores_ are supported'
           )
-        );
+        )
       }
-      callback();
-    };
+      callback()
+    }
     const checkTotalMemory = (rule, value, callback) => {
       if (!value) {
-        callback(new Error("Please enter the total capacity"));
+        callback(new Error('Please enter the total capacity'))
       }
       if (value <= 0) {
-        callback(new Error("Please enter a value greater than 0"));
+        callback(new Error('Please enter a value greater than 0'))
       }
-      callback();
-    };
+      callback()
+    }
     const checCustomSpec = (rule, value, callback) => {
       if (
-        value === "custom" &&
+        value === 'custom' &&
         (!this.specCustomForm.core || !this.specCustomForm.memory)
       ) {
-        callback(new Error("Please enter specification"));
+        callback(new Error('Please enter specification'))
       }
       if (
-        value === "custom" &&
+        value === 'custom' &&
         (this.specCustomForm.core <= 0 || this.specCustomForm.memory <= 0)
       ) {
-        callback(new Error("Please enter a value greater than 0"));
+        callback(new Error('Please enter a value greater than 0'))
       }
-      callback();
-    };
+      callback()
+    }
     return {
-      memoryUnit: "G",
-      specMemoryUnit: "G",
-      memoryUnitOptions: ["G", "M"],
+      memoryUnit: 'G',
+      specMemoryUnit: 'G',
+      memoryUnitOptions: ['G', 'M'],
       rules: {
         name: [
           {
             validator: checkName,
-            trigger: "change"
+            trigger: 'change'
           }
         ],
         total_memory: [
           {
             validator: checkTotalMemory,
-            trigger: "change"
+            trigger: 'change'
           }
         ],
         spec: [
           {
             validator: checCustomSpec,
-            trigger: "change"
+            trigger: 'change'
           }
         ]
       },
       clusterForm: {
         name: null,
-        cache_type: "redis_cluster",
-        spec: "0.25c2g",
+        cache_type: 'redis_cluster',
+        spec: '0.25c2g',
         total_memory: null,
         version: null,
-        group: "sh001",
+        group: 'sh001',
         appids: []
       },
       typeOptions: TYPE_OPTIONS,
@@ -213,91 +213,91 @@ export default {
       },
       appidOptions: [],
       submitDisabled: false
-    };
+    }
   },
-  created() {
-    this.getAppids();
-    this.getVersions();
+  created () {
+    this.getAppids()
+    this.getVersions()
   },
   methods: {
-    async getAppids() {
+    async getAppids () {
       try {
         const { data } = await getAppidsApi({
-          format: "plain"
-        });
-        this.appidOptions = data.items;
+          format: 'plain'
+        })
+        this.appidOptions = data.items
       } catch (_) {
-        this.$message.error("Fail to get AppId list");
+        this.$message.error('Fail to get AppId list')
       }
     },
-    typeChange() {
-      this.clusterForm.version = null;
-      this.versionOptions = [];
+    typeChange () {
+      this.clusterForm.version = null
+      this.versionOptions = []
       this.versionOptions = this.allVersionOptions.find(
         item => item.cache_type === this.clusterForm.cache_type
-      ).versions;
-      this.clusterForm.version = this.versionOptions[0];
+      ).versions
+      this.clusterForm.version = this.versionOptions[0]
     },
-    async getVersions() {
+    async getVersions () {
       try {
-        const { data } = await getVersionsApi();
-        this.allVersionOptions = data.items;
+        const { data } = await getVersionsApi()
+        this.allVersionOptions = data.items
         this.versionOptions = this.allVersionOptions.find(
           item => item.cache_type === this.clusterForm.cache_type
-        ).versions;
-        this.clusterForm.version = this.versionOptions[0];
+        ).versions
+        this.clusterForm.version = this.versionOptions[0]
       } catch (_) {
-        this.$message.error("Fail to get version list");
+        this.$message.error('Fail to get version list')
       }
     },
-    submitForm(formName) {
+    submitForm (formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.onSubmit();
+          this.onSubmit()
         } else {
-          return false;
+          return false
         }
-      });
+      })
     },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
       // this.clusterForm.spec = null
-      this.clusterForm.version = this.versionOptions[0];
-      this.memoryUnit = "G";
-      this.specMemoryUnit = "G";
+      this.clusterForm.version = this.versionOptions[0]
+      this.memoryUnit = 'G'
+      this.specMemoryUnit = 'G'
     },
-    async onSubmit() {
-      let params = JSON.parse(JSON.stringify(this.clusterForm));
+    async onSubmit () {
+      let params = JSON.parse(JSON.stringify(this.clusterForm))
       params.total_memory =
-        this.memoryUnit === "G"
+        this.memoryUnit === 'G'
           ? Number(params.total_memory) * 1024
-          : Number(params.total_memory);
-      if (params.spec === "custom") {
+          : Number(params.total_memory)
+      if (params.spec === 'custom') {
         params.spec = `${this.specCustomForm.core}c${
           this.specCustomForm.memory
-        }${this.specMemoryUnit === "G" ? "g" : "m"}`;
+        }${this.specMemoryUnit === 'G' ? 'g' : 'm'}`
       }
-      this.submitDisabled = true;
+      this.submitDisabled = true
       try {
-        await createClusterApi(params);
-        this.$message.success("Creating，please wait");
+        await createClusterApi(params)
+        this.$message.success('Creating，please wait')
         setTimeout(() => {
           this.$router.push({
-            name: "cluster",
+            name: 'cluster',
             params: { name: this.clusterForm.name }
-          });
-        }, 3000);
+          })
+        }, 3000)
       } catch ({ error }) {
-        this.$message.error(`Fail to create：${error}`);
+        this.$message.error(`Fail to create：${error}`)
       }
-      this.submitDisabled = false;
+      this.submitDisabled = false
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/style/mixin.scss";
+@import "@/assets/css/mixin.scss";
 $edit-icon-color: #1890ff;
 $green-color: #67c23a;
 

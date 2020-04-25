@@ -38,19 +38,19 @@
 </template>
 
 <script>
-import { throttle } from "lodash";
-import { mapState } from "vuex";
+import { throttle } from 'lodash'
+import { mapState } from 'vuex'
 
 export default {
-  name: "home",
-  data() {
+  name: 'home',
+  data () {
     return {
       clusterKeyword: null
-    };
+    }
   },
-  created() {
-    this.clusterKeyword = this.$route.query.key;
-    this.loadClusterData();
+  created () {
+    this.clusterKeyword = this.$route.query.key
+    this.loadClusterData()
   },
   computed: {
     ...mapState({
@@ -58,31 +58,31 @@ export default {
     })
   },
   methods: {
-    searchCluster: throttle(function searchCluster() {
-      this.loadClusterData();
+    searchCluster: throttle(function searchCluster () {
+      this.loadClusterData()
     }, 1000),
-    async loadClusterData() {
-      if (!this.clusterKeyword) return;
-      this.$store.dispatch("clusters/getClusterResult", {
+    async loadClusterData () {
+      if (!this.clusterKeyword) return
+      this.$store.dispatch('clusters/getClusterResult', {
         name: this.clusterKeyword
-      });
+      })
       this.$router.replace({
-        name: "home",
+        name: 'home',
         query: { key: this.clusterKeyword }
-      });
+      })
     },
-    linkToClusterDetail({ name }) {
-      this.$router.push({ name: "cluster", params: { name } });
+    linkToClusterDetail ({ name }) {
+      this.$router.push({ name: 'cluster', params: { name } })
     },
-    linkToMoni({ monitor }) {
-      window.open(monitor);
+    linkToMoni ({ monitor }) {
+      window.open(monitor)
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
-@import "@/style/mixin.scss";
+@import "@/assets/css/mixin.scss";
 
 .home-page {
   width: 100%;

@@ -36,7 +36,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/style/mixin.scss';
+@import '@/assets/css/mixin.scss';
 
 // @font-face {
 //   font-family: titleFont;

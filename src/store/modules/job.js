@@ -1,4 +1,4 @@
-import { getJobsApi } from '@/http/api'
+import { getJobsApi } from '@/utils/api'
 import { Message } from 'element-ui'
 import * as types from '../mutation-types'
 
@@ -28,7 +28,7 @@ const actions = {
       const { data: { items } } = await getJobsApi()
       commit(types.SAVE_JOB_LIST, items)
     } catch ({ error }) {
-      Message.error(`获取失败：${error}`)
+      Message.error(`Fail to get jobs: ${error}`)
     }
     commit(types.SAVE_JOB_LOADING, false)
   }
