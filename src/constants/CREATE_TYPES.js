@@ -12,21 +12,21 @@ const TYPE_OPTIONS = [{
 
 // 集群型号
 const SPEC_OPTIONS = [{
-  name: '小型',
+  name: 'small',
   value: '0.25c2g'
 }, {
-  name: '中型',
+  name: 'middle',
   value: '0.5c2g'
 }, {
-  name: '大型',
+  name: 'large',
   value: '1c4g'
 }, {
-  name: '定制',
+  name: 'custom',
   value: 'custom'
 }]
 
 const GROUP_OPTIONS = [{
-  name: '上海核心',
+  name: 'Shanghai',
   value: 'sh001'
 }]
 

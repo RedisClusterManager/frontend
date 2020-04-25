@@ -2,16 +2,16 @@
   <div class="create-page">
     <p class="create-page__title">创建集群</p>
     <div class="create-container">
-      <el-form :model="clusterForm" :rules="rules" ref="clusterForm" label-width="80px">
+      <el-form :model="clusterForm" :rules="rules" ref="clusterForm" label-width="120px">
 
-        <el-form-item label="名称" prop="name" required>
+        <el-form-item label="Name" prop="name" required>
           <el-input v-model="clusterForm.name"></el-input>
         </el-form-item>
 
-        <el-form-item label="总容量" prop="total_memory" required>
+        <el-form-item label="Total Capacity" prop="total_memory" required>
           <el-input v-model="clusterForm.total_memory" type="number">
             <template slot="append">
-              <el-select v-model="memoryUnit" placeholder="请选择">
+              <el-select v-model="memoryUnit" placeholder="Please choose">
                 <el-option
                   v-for="item in memoryUnitOptions"
                   :key="item"
@@ -23,7 +23,7 @@
           </el-input>
         </el-form-item>
 
-        <el-form-item label="类型" prop="cache_type" required>
+        <!-- <el-form-item label="类型" prop="cache_type" required>
           <el-radio-group v-model="clusterForm.cache_type" @change="typeChange">
             <el-radio :label="item.value" v-for="(item, index) in typeOptions" :key="index">{{ item.name }}</el-radio>
           </el-radio-group>
@@ -42,31 +42,31 @@
             </div>
             <i class="el-icon-info type-icon"></i>
           </el-tooltip>
-        </el-form-item>
+        </el-form-item> -->
 
-        <el-form-item label="版本" prop="version" required>
+        <el-form-item label="Version" prop="version" required>
           <el-radio-group v-model="clusterForm.version">
             <el-radio :label="item" v-for="(item, index) in versionOptions" :key="index">{{ item }}</el-radio>
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item label="型号" required>
+        <el-form-item label="Type" required>
           <el-radio-group v-model="clusterForm.spec">
             <el-radio :label="item.value" v-for="(item, index) in specOptions" :key="index">{{ item.name }}</el-radio>
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item label="规格" prop="spec" required>
+        <el-form-item label="Specification" prop="spec" required>
           <div v-if="clusterForm.spec !== 'custom'">
             {{clusterForm.spec}}
           </div>
           <div v-else class="custom-spec">
             <el-input v-model="specCustomForm.core" size="mini" type="number">
-              <template slot="append">核</template>
+              <template slot="append">Core</template>
             </el-input>
             <el-input v-model="specCustomForm.memory" size="mini" type="number">
               <template slot="append">
-                <el-select v-model="specMemoryUnit" placeholder="请选择">
+                <el-select v-model="specMemoryUnit" placeholder="Please choose">
                   <el-option
                     v-for="item in memoryUnitOptions"
                     :key="item"
@@ -79,8 +79,8 @@
             </div>
         </el-form-item>
 
-        <el-form-item label="分组" required>
-          <el-select v-model="clusterForm.group" class="group-select" filterable placeholder="请选择需要关联 APPID">
+        <el-form-item label="Group" required>
+          <el-select v-model="clusterForm.group" class="group-select" filterable placeholder="Please select the APPID to be correlated">
             <el-option
               v-for="item in groupOptions"
               :key="item.name"
@@ -91,7 +91,7 @@
         </el-form-item>
 
         <el-form-item label="APPID" prop="appids">
-          <el-select v-model="clusterForm.appids" class="appid-select" multiple filterable placeholder="请选择需要关联 APPID">
+          <el-select v-model="clusterForm.appids" class="appid-select" multiple filterable placeholder="Please select the APPID to be correlated" no-data-text="No data">
             <el-option
               v-for="item in appidOptions"
               :key="item"
@@ -102,8 +102,8 @@
         </el-form-item>
 
         <el-form-item class="footer-item">
-          <el-button @click="resetForm('clusterForm')">重置</el-button>
-          <el-button type="primary" @click="submitForm('clusterForm')" :disabled="submitDisabled">立即创建</el-button>
+          <el-button @click="resetForm('clusterForm')">Reset</el-button>
+          <el-button type="primary" @click="submitForm('clusterForm')" :disabled="submitDisabled">Create</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -119,28 +119,28 @@ export default {
   data () {
     const checkName = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('请输入名称'))
+        callback(new Error('Please enter a name'))
       }
       if (!/^\w+$/.test(value)) {
-        callback(new Error('仅支持英文大小写、数字和下划线_'))
+        callback(new Error('Only English characters, numbers and underscores_ are supported'))
       }
       callback()
     }
     const checkTotalMemory = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('请输入总容量'))
+        callback(new Error('Please enter the total capacity'))
       }
       if (value <= 0) {
-        callback(new Error('请输入大于0的数值'))
+        callback(new Error('Please enter a value greater than 0'))
       }
       callback()
     }
     const checCustomSpec = (rule, value, callback) => {
       if (value === 'custom' && (!this.specCustomForm.core || !this.specCustomForm.memory)) {
-        callback(new Error('请输入规格'))
+        callback(new Error('Please enter specification'))
       }
       if (value === 'custom' && (this.specCustomForm.core <= 0 || this.specCustomForm.memory <= 0)) {
-        callback(new Error('请输入大于0的数值'))
+        callback(new Error('Please enter a value greater than 0'))
       }
       callback()
     }
@@ -196,7 +196,7 @@ export default {
         })
         this.appidOptions = data.items
       } catch (_) {
-        this.$message.error('AppId 列表获取失败')
+        this.$message.error('Fail to get AppId list')
       }
     },
     typeChange () {
@@ -212,7 +212,7 @@ export default {
         this.versionOptions = this.allVersionOptions.find(item => item.cache_type === this.clusterForm.cache_type).versions
         this.clusterForm.version = this.versionOptions[0]
       } catch (_) {
-        this.$message.error('版本列表获取失败')
+        this.$message.error('Fail to get version list')
       }
     },
     submitForm (formName) {
@@ -240,12 +240,12 @@ export default {
       this.submitDisabled = true
       try {
         await createClusterApi(params)
-        this.$message.success('创建中，请等待')
+        this.$message.success('Creating，please wait')
         setTimeout(() => {
           this.$router.push({ name: 'cluster', params: { name: this.clusterForm.name } })
         }, 3000)
       } catch ({ error }) {
-        this.$message.error(`创建失败：${error}`)
+        this.$message.error(`Fail to create：${error}`)
       }
       this.submitDisabled = false
     }
@@ -264,7 +264,7 @@ $green-color: #67C23A;
 }
 
 .create-container {
-  padding: 20px 40px;
+  padding: 20px 20px;
   margin-top: 20px;
   background: #fff;
   border-radius: 5px;

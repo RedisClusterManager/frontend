@@ -5,7 +5,7 @@
       <div class="search-panel__input">
         <el-input
           v-model="clusterKeyword"
-          placeholder="请输入集群名关键字进行搜索"
+          placeholder="Please enter cluster keywords to search"
           size="large"
           @keyup.native="searchCluster"
           clearable>
@@ -16,23 +16,23 @@
     <transition name="slide-fade" mode="out-in" appear>
       <div v-if="clusterList.length" class="search-result">
         <el-table :data="clusterList" border max-height="500">
-          <el-table-column prop="name" label="集群名称" min-width="100">
+          <el-table-column prop="name" label="Cluster Name" min-width="100">
           </el-table-column>
-          <el-table-column prop="cache_type" label="缓存类型">
+          <el-table-column prop="cache_type" label="Cache Type">
           </el-table-column>
-          <el-table-column prop="front_end_port" label="前端端口">
+          <el-table-column prop="front_end_port" label="Front-end Port">
           </el-table-column>
-          <el-table-column prop="max_memory" label="总容量">
+          <el-table-column prop="max_memory" label="Total Capacity">
             <template slot-scope="{ row }">
               {{ row.max_memory }} MB
             </template>
           </el-table-column>
-          <el-table-column prop="number" label="节点数">
+          <el-table-column prop="number" label="Number of Nodes">
           </el-table-column>
-          <el-table-column label="详情" width="150">>
+          <el-table-column label="detail" width="150">>
             <template slot-scope="{ row }">
-              <el-button v-if="row.monitor" type="text" @click="linkToMoni(row)">监控</el-button>
-              <el-button type="text" @click="linkToClusterDetail(row)">集群详情</el-button>
+              <el-button v-if="row.monitor" type="text" @click="linkToMoni(row)">monitor</el-button>
+              <el-button type="text" @click="linkToClusterDetail(row)">cluster detail</el-button>
             </template>
           </el-table-column>
         </el-table>

@@ -17,85 +17,86 @@
           @node-click="handleNodeClick"
           default-expand-all
           :filter-node-method="filterNode"
-          ref="appidTree">
+          ref="appidTree"
+          empty-text="No data">
         </el-tree>
-        <el-button size="mini" type="text" @click="addIdDialogVisible = true">添加 AppId</el-button>
+        <el-button size="mini" type="text" @click="addIdDialogVisible = true">Add AppId</el-button>
 
       </div>
       <div class="appid-info" v-loading="clusterLoading">
         <div class="appid-header">
           <p>{{ appid }}</p>
-          <el-button type="text" size="large" @click="dialogVisible = true">添加关联</el-button>
+          <el-button type="text" size="large" @click="dialogVisible = true">Add Correlation</el-button>
         </div>
         <div class="appid-group" v-for="(groupItem, index) in groupedClusters" :key="index">
           <div class="appid-group__title">{{ GROUP_MAP[groupItem.group] }}</div>
           <el-table :data="groupItem.clusters" border max-height="500">
-            <el-table-column prop="name" label="集群名称" min-width="100">
+            <el-table-column prop="name" label="Cluster Name" min-width="100">
             </el-table-column>
-            <el-table-column prop="cache_type" label="缓存类型" min-width="90">
+            <el-table-column prop="cache_type" label="Cache Type" min-width="90">
             </el-table-column>
-            <el-table-column prop="front_end_port" label="前端端口">
+            <el-table-column prop="front_end_port" label="Front-end Port">
             </el-table-column>
-            <el-table-column prop="max_memory" label="总容量">
+            <el-table-column prop="max_memory" label="Total Capacity">
               <template slot-scope="{ row }">
                 {{ row.max_memory }} MB
               </template>
             </el-table-column>
-            <el-table-column prop="number" label="节点数" min-width="70">
+            <el-table-column prop="number" label="Number of Nodes" min-width="70">
             </el-table-column>
-            <el-table-column label="详情" min-width="135">
+            <el-table-column label="Detail" min-width="135">
               <template slot-scope="{ row }">
-                <el-button type="text" @click="removeCorrelation(row)">解除关联</el-button>
-                <!-- <el-button type="text" @click="linkToSetting(row)">编辑关联</el-button> -->
-                <el-button type="text" @click="linkToCluster(row)">集群详情</el-button>
+                <el-button type="text" @click="removeCorrelation(row)">Remove Correlation</el-button>
+                <!-- <el-button type="text" @click="linkToSetting(row)">Edit Correlation</el-button> -->
+                <el-button type="text" @click="linkToCluster(row)">Detail</el-button>
               </template>
             </el-table-column>
           </el-table>
         </div>
         <div v-if="!groupedClusters.length" class="appid-group appid-group--empty" >
-          暂无集群，
-          <el-button type="text" size="mini" @click="dialogVisible = true">去关联</el-button>
+          No clusters,
+          <el-button type="text" size="mini" @click="dialogVisible = true">go to correlate</el-button>
         </div>
       </div>
     </div>
 
-    <el-dialog title="添加关联" :visible.sync="dialogVisible" width="600px" custom-class="correlation-dialog">
+    <el-dialog title="Add Correlate" :visible.sync="dialogVisible" width="600px" custom-class="correlation-dialog">
       <el-input
-        placeholder="输入集群关键字进行搜索"
+        placeholder="Enter cluster keywords to search"
         clearable
         v-model="clusterKeyword"
         @keyup.native="searchCluster">
       </el-input>
       <el-table :data="clusterList" v-loading="queryLoading" border max-height="300px">
-        <el-table-column prop="name" label="集群" width="150">
+        <el-table-column prop="name" label="Cluster" width="150">
         </el-table-column>
-        <el-table-column prop="group" label="机房">
+        <el-table-column prop="group" label="Group">
           <template slot-scope="{ row }">
             {{ GROUP_MAP[row.group] }}
           </template>
         </el-table-column>
         <el-table-column label="详情" width="230">
           <template slot-scope="{ row }">
-            <el-button type="text" @click="addCorrelation(row)">关联到 {{ appid }}</el-button>
+            <el-button type="text" @click="addCorrelation(row)">Correlate to {{ appid }}</el-button>
           </template>
         </el-table-column>
       </el-table>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">关闭</el-button>
+        <el-button @click="dialogVisible = false">Close</el-button>
       </span>
     </el-dialog>
 
-    <el-dialog title="添加 AppId" :visible.sync="addIdDialogVisible" width="400px" custom-class="correlation-dialog">
+    <el-dialog title="Add AppId" :visible.sync="addIdDialogVisible" width="400px" custom-class="correlation-dialog">
       <div class="addid-panel">
-        <el-input placeholder="部门" v-model="appidForm.department" size="mini">
+        <el-input placeholder="Department" v-model="appidForm.department" size="mini">
         </el-input>
         -
-        <el-input placeholder="服务" v-model="appidForm.service" size="mini">
+        <el-input placeholder="Service" v-model="appidForm.service" size="mini">
         </el-input>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="addIdDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitAddAppId">确 定</el-button>
+        <el-button @click="addIdDialogVisible = false">Cancel</el-button>
+        <el-button type="primary" @click="submitAddAppId">Confirm</el-button>
       </span>
     </el-dialog>
   </div>
@@ -159,7 +160,7 @@ export default {
         this.appidTree = data.items
         this.getClusterList(this.$route.query.name || this.appidTree[0].children[0].name)
       } catch ({ error }) {
-        this.$message.error(`获取失败：${error}`)
+        this.$message.error(`Fail to get Appids: ${error}`)
       }
       this.appidLoading = false
     },
@@ -175,7 +176,7 @@ export default {
         this.groupedClusters = data.grouped_clusters
         this.appid = name
       } catch ({ error }) {
-        this.$message.error(`获取失败：${error}`)
+        this.$message.error(`Fail to get cluster list: ${error}`)
       }
       this.clusterLoading = false
     },
@@ -185,9 +186,10 @@ export default {
       }
     },
     removeCorrelation ({ id, name }) {
-      this.$confirm(`您将解除集群【${name}】和 AppId【${this.appid}】的关联, 是否继续?`, '解除提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm(`You will disassociate the cluster [${name}] and AppId [${this.appid}], are you sure to continue?`, 
+        'Remove', {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(() => {
         this.confirmRemoveCorrelation(name)
@@ -200,15 +202,15 @@ export default {
           appid: this.appid
         })
         this.getClusterList(this.appid)
-        this.$message.success('解除成功')
+        this.$message.success('Successfully remove')
       } catch ({ error }) {
-        this.$message.error(`解除失败：${error}`)
+        this.$message.error(`Fail to remove${error}`)
       }
     },
     addCorrelation ({ name }) {
-      this.$confirm(`将关联集群【${name}】和 AppId【${this.appid}】, 是否继续?`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm(`Cluster [${name}] and AppId [${this.appid}] will be correlated, are you sure to continue?`, 'Correlate', {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
         type: 'info'
       }).then(() => {
         this.confirmAddCorrelation(name)
@@ -222,9 +224,9 @@ export default {
         })
         this.dialogVisible = false
         this.getClusterList(this.appid)
-        this.$message.success('关联成功')
+        this.$message.success('Successfully Correlated')
       } catch ({ error }) {
-        this.$message.error(`关联失败：${error}`)
+        this.$message.error(`Fail to correalte：${error}`)
       }
     },
     linkToCluster ({ name }) {
@@ -234,7 +236,7 @@ export default {
     async submitAddAppId () {
       const { department, service } = this.appidForm
       if (!department && !service) {
-        this.$message.warning('请填写完整')
+        this.$message.warning('Please enter all infomation required')
         return
       }
       try {
@@ -243,11 +245,11 @@ export default {
         })
         this.addIdDialogVisible = false
         this.getAppids()
-        this.$message.success('添加成功')
+        this.$message.success('Successfully add Appid')
         this.appidForm.department = null
         this.appidForm.service = null
       } catch ({ error }) {
-        this.$message.error(`添加失败：${error}`)
+        this.$message.error(`Fail to add Appid: ${error}`)
       }
     },
     // linkToSetting () {

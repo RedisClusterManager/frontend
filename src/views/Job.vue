@@ -1,7 +1,7 @@
 <template>
   <div>
-    <p class="job-page__title">Job 列表</p>
-    <el-table :data="jobList" ref="dataTable" v-loading="loading" border @current-change="onSelectionChanged">
+    <p class="job-page__title">Job List</p>
+    <el-table :data="jobList" ref="dataTable" v-loading="loading" border @current-change="onSelectionChanged" empty-text="No data">
       <el-table-column type="expand">
         <template slot-scope="{ row }">
           <vue-json-pretty v-if="row.param" :data="JSON.parse(row.param)"></vue-json-pretty>
