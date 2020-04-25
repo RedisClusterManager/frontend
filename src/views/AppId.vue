@@ -2,11 +2,7 @@
   <div>
     <div class="appid-container">
       <div class="appid-tree">
-        <el-input
-          placeholder="输入关键字进行过滤"
-          clearable
-          v-model="filterText">
-        </el-input>
+        <el-input placeholder="输入关键字进行过滤" clearable v-model="filterText"></el-input>
 
         <el-tree
           v-loading="appidLoading"
@@ -18,10 +14,9 @@
           default-expand-all
           :filter-node-method="filterNode"
           ref="appidTree"
-          empty-text="No data">
-        </el-tree>
+          empty-text="No data"
+        ></el-tree>
         <el-button size="mini" type="text" @click="addIdDialogVisible = true">Add AppId</el-button>
-
       </div>
       <div class="appid-info" v-loading="clusterLoading">
         <div class="appid-header">
@@ -31,19 +26,13 @@
         <div class="appid-group" v-for="(groupItem, index) in groupedClusters" :key="index">
           <div class="appid-group__title">{{ GROUP_MAP[groupItem.group] }}</div>
           <el-table :data="groupItem.clusters" border max-height="500">
-            <el-table-column prop="name" label="Cluster Name" min-width="100">
-            </el-table-column>
-            <el-table-column prop="cache_type" label="Cache Type" min-width="90">
-            </el-table-column>
-            <el-table-column prop="front_end_port" label="Front-end Port">
-            </el-table-column>
+            <el-table-column prop="name" label="Cluster Name" min-width="100"></el-table-column>
+            <el-table-column prop="cache_type" label="Cache Type" min-width="90"></el-table-column>
+            <el-table-column prop="front_end_port" label="Front-end Port"></el-table-column>
             <el-table-column prop="max_memory" label="Total Capacity">
-              <template slot-scope="{ row }">
-                {{ row.max_memory }} MB
-              </template>
+              <template slot-scope="{ row }">{{ row.max_memory }} MB</template>
             </el-table-column>
-            <el-table-column prop="number" label="Number of Nodes" min-width="70">
-            </el-table-column>
+            <el-table-column prop="number" label="Number of Nodes" min-width="70"></el-table-column>
             <el-table-column label="Detail" min-width="135">
               <template slot-scope="{ row }">
                 <el-button type="text" @click="removeCorrelation(row)">Remove Correlation</el-button>
@@ -53,27 +42,29 @@
             </el-table-column>
           </el-table>
         </div>
-        <div v-if="!groupedClusters.length" class="appid-group appid-group--empty" >
+        <div v-if="!groupedClusters.length" class="appid-group appid-group--empty">
           No clusters,
           <el-button type="text" size="mini" @click="dialogVisible = true">go to correlate</el-button>
         </div>
       </div>
     </div>
 
-    <el-dialog title="Add Correlate" :visible.sync="dialogVisible" width="600px" custom-class="correlation-dialog">
+    <el-dialog
+      title="Add Correlate"
+      :visible.sync="dialogVisible"
+      width="600px"
+      custom-class="correlation-dialog"
+    >
       <el-input
         placeholder="Enter cluster keywords to search"
         clearable
         v-model="clusterKeyword"
-        @keyup.native="searchCluster">
-      </el-input>
+        @keyup.native="searchCluster"
+      ></el-input>
       <el-table :data="clusterList" v-loading="queryLoading" border max-height="300px">
-        <el-table-column prop="name" label="Cluster" width="150">
-        </el-table-column>
+        <el-table-column prop="name" label="Cluster" width="150"></el-table-column>
         <el-table-column prop="group" label="Group">
-          <template slot-scope="{ row }">
-            {{ GROUP_MAP[row.group] }}
-          </template>
+          <template slot-scope="{ row }">{{ GROUP_MAP[row.group] }}</template>
         </el-table-column>
         <el-table-column label="详情" width="230">
           <template slot-scope="{ row }">
@@ -86,13 +77,15 @@
       </span>
     </el-dialog>
 
-    <el-dialog title="Add AppId" :visible.sync="addIdDialogVisible" width="400px" custom-class="correlation-dialog">
+    <el-dialog
+      title="Add AppId"
+      :visible.sync="addIdDialogVisible"
+      width="400px"
+      custom-class="correlation-dialog"
+    >
       <div class="addid-panel">
-        <el-input placeholder="Department" v-model="appidForm.department" size="mini">
-        </el-input>
-        -
-        <el-input placeholder="Service" v-model="appidForm.service" size="mini">
-        </el-input>
+        <el-input placeholder="Department" v-model="appidForm.department" size="mini"></el-input>-
+        <el-input placeholder="Service" v-model="appidForm.service" size="mini"></el-input>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="addIdDialogVisible = false">Cancel</el-button>
@@ -103,20 +96,26 @@
 </template>
 
 <script>
-import GROUP_MAP from '@/constants/GROUP'
-import { getAppidsApi, getAppidDetailApi, removeCorrelationApi, addCorrelationApi, addAppIdApi } from '@/http/api'
-import { mapState } from 'vuex'
-import { throttle } from 'lodash'
+import GROUP_MAP from "@/constants/GROUP";
+import {
+  getAppidsApi,
+  getAppidDetailApi,
+  removeCorrelationApi,
+  addCorrelationApi,
+  addAppIdApi
+} from "@/http/api";
+import { mapState } from "vuex";
+import { throttle } from "lodash";
 
 export default {
-  data () {
+  data() {
     return {
       GROUP_MAP,
       filterText: null,
       appidTree: [],
       defaultProps: {
-        children: 'children',
-        label: 'label'
+        children: "children",
+        label: "label"
       },
       appid: null,
       groupedClusters: [],
@@ -131,10 +130,10 @@ export default {
         department: null,
         service: null
       }
-    }
+    };
   },
-  created () {
-    this.getAppids()
+  created() {
+    this.getAppids();
   },
   computed: {
     ...mapState({
@@ -143,129 +142,140 @@ export default {
     })
   },
   watch: {
-    filterText (val) {
-      this.$refs.appidTree.filter(val)
+    filterText(val) {
+      this.$refs.appidTree.filter(val);
     },
-    appid (nv) {
-      this.$router.replace({ name: 'appId', query: { name: nv } })
+    appid(nv) {
+      this.$router.replace({ name: "appId", query: { name: nv } });
     }
   },
   methods: {
-    async getAppids () {
-      this.appidLoading = true
+    async getAppids() {
+      this.appidLoading = true;
       try {
         const { data } = await getAppidsApi({
-          format: 'tree'
-        })
-        this.appidTree = data.items
-        this.getClusterList(this.$route.query.name || this.appidTree[0].children[0].name)
+          format: "tree"
+        });
+        this.appidTree = data.items;
+        this.getClusterList(
+          this.$route.query.name || this.appidTree[0].children[0].name
+        );
       } catch ({ error }) {
-        this.$message.error(`Fail to get Appids: ${error}`)
+        this.$message.error(`Fail to get Appids: ${error}`);
       }
-      this.appidLoading = false
+      this.appidLoading = false;
     },
-    filterNode (value, data) {
-      if (!value) return true
-      return data.label.indexOf(value) !== -1
+    filterNode(value, data) {
+      if (!value) return true;
+      return data.label.indexOf(value) !== -1;
     },
-    async getClusterList (name) {
-      if (!name) return
-      this.clusterLoading = true
+    async getClusterList(name) {
+      if (!name) return;
+      this.clusterLoading = true;
       try {
-        const { data } = await getAppidDetailApi(name)
-        this.groupedClusters = data.grouped_clusters
-        this.appid = name
+        const { data } = await getAppidDetailApi(name);
+        this.groupedClusters = data.grouped_clusters;
+        this.appid = name;
       } catch ({ error }) {
-        this.$message.error(`Fail to get cluster list: ${error}`)
+        this.$message.error(`Fail to get cluster list: ${error}`);
       }
-      this.clusterLoading = false
+      this.clusterLoading = false;
     },
-    handleNodeClick (data) {
+    handleNodeClick(data) {
       if (!data.children) {
-        this.getClusterList(data.name)
+        this.getClusterList(data.name);
       }
     },
-    removeCorrelation ({ id, name }) {
-      this.$confirm(`You will disassociate the cluster [${name}] and AppId [${this.appid}], are you sure to continue?`, 
-        'Remove', {
-        confirmButtonText: 'Confirm',
-        cancelButtonText: 'Cancel',
-        type: 'warning'
-      }).then(() => {
-        this.confirmRemoveCorrelation(name)
-      }).catch(() => {
-      })
+    removeCorrelation({ id, name }) {
+      this.$confirm(
+        `You will disassociate the cluster [${name}] and AppId [${this.appid}], are you sure to continue?`,
+        "Remove",
+        {
+          confirmButtonText: "Confirm",
+          cancelButtonText: "Cancel",
+          type: "warning"
+        }
+      )
+        .then(() => {
+          this.confirmRemoveCorrelation(name);
+        })
+        .catch(() => {});
     },
-    async confirmRemoveCorrelation (name) {
+    async confirmRemoveCorrelation(name) {
       try {
         await removeCorrelationApi(name, {
           appid: this.appid
-        })
-        this.getClusterList(this.appid)
-        this.$message.success('Successfully remove')
+        });
+        this.getClusterList(this.appid);
+        this.$message.success("Successfully remove");
       } catch ({ error }) {
-        this.$message.error(`Fail to remove${error}`)
+        this.$message.error(`Fail to remove${error}`);
       }
     },
-    addCorrelation ({ name }) {
-      this.$confirm(`Cluster [${name}] and AppId [${this.appid}] will be correlated, are you sure to continue?`, 'Correlate', {
-        confirmButtonText: 'Confirm',
-        cancelButtonText: 'Cancel',
-        type: 'info'
-      }).then(() => {
-        this.confirmAddCorrelation(name)
-      }).catch(() => {
-      })
+    addCorrelation({ name }) {
+      this.$confirm(
+        `Cluster [${name}] and AppId [${this.appid}] will be correlated, are you sure to continue?`,
+        "Correlate",
+        {
+          confirmButtonText: "Confirm",
+          cancelButtonText: "Cancel",
+          type: "info"
+        }
+      )
+        .then(() => {
+          this.confirmAddCorrelation(name);
+        })
+        .catch(() => {});
     },
-    async confirmAddCorrelation (name) {
+    async confirmAddCorrelation(name) {
       try {
         await addCorrelationApi(name, {
           appid: this.appid
-        })
-        this.dialogVisible = false
-        this.getClusterList(this.appid)
-        this.$message.success('Successfully Correlated')
+        });
+        this.dialogVisible = false;
+        this.getClusterList(this.appid);
+        this.$message.success("Successfully Correlated");
       } catch ({ error }) {
-        this.$message.error(`Fail to correalte：${error}`)
+        this.$message.error(`Fail to correalte：${error}`);
       }
     },
-    linkToCluster ({ name }) {
-      this.$router.push({ name: 'cluster', params: { name } })
+    linkToCluster({ name }) {
+      this.$router.push({ name: "cluster", params: { name } });
     },
     // 添加 appid
-    async submitAddAppId () {
-      const { department, service } = this.appidForm
+    async submitAddAppId() {
+      const { department, service } = this.appidForm;
       if (!department && !service) {
-        this.$message.warning('Please enter all infomation required')
-        return
+        this.$message.warning("Please enter all infomation required");
+        return;
       }
       try {
         await addAppIdApi({
           appid: `${department}.${service}`
-        })
-        this.addIdDialogVisible = false
-        this.getAppids()
-        this.$message.success('Successfully add Appid')
-        this.appidForm.department = null
-        this.appidForm.service = null
+        });
+        this.addIdDialogVisible = false;
+        this.getAppids();
+        this.$message.success("Successfully add Appid");
+        this.appidForm.department = null;
+        this.appidForm.service = null;
       } catch ({ error }) {
-        this.$message.error(`Fail to add Appid: ${error}`)
+        this.$message.error(`Fail to add Appid: ${error}`);
       }
     },
     // linkToSetting () {
 
     // },
-    searchCluster: throttle(function searchCluster () {
-      this.loadClusterData()
+    searchCluster: throttle(function searchCluster() {
+      this.loadClusterData();
     }, 1000),
-    async loadClusterData () {
-      if (!this.clusterKeyword) return
-      this.$store.dispatch('clusters/getClusterResult', {
+    async loadClusterData() {
+      if (!this.clusterKeyword) return;
+      this.$store.dispatch("clusters/getClusterResult", {
         name: this.clusterKeyword
-      })
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

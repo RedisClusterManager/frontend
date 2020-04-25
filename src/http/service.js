@@ -1,31 +1,31 @@
 import axios from 'axios'
 import config from './config'
-import { Message } from 'element-ui'
+// import { Message } from 'element-ui'
 
 const service = axios.create(config)
 
 // 添加请求拦截器
 service.interceptors.request.use(
-    req => {
-        return req
-    },
-    error => {
-        return Promise.reject(error)
-    }
+  req => {
+    return req
+  },
+  error => {
+    return Promise.reject(error)
+  }
 )
 
 // 返回状态判断(添加响应拦截器)
 service.interceptors.response.use(
-    res => {
-        return res
-    },
-    error => {
-        Message({
-            message: error.message,
-            type: 'error'
-        })
-        return Promise.reject(error)
-    }
+  res => {
+    return res
+  },
+  error => {
+    // Message({
+    //     message: error.message,
+    //     type: 'error'
+    // })
+    return Promise.reject(error)
+  }
 )
 
 export default service

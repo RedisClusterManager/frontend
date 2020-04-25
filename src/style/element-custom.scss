@@ -9,18 +9,22 @@
     text-align: left;
     border: none;
     background: #000;
+
     // @include linear-gradient(to bottom, rgba(0,0,0, 1) 0%,  rgba(0,0,0,1) 100%);
     // @include linear-gradient(to bottom, rgba(47, 96, 181, 1) 0%,  rgba(150, 211, 243, 1) 100%);
     .el-menu-item {
         border-left: 2px;
     }
+
     .el-menu-item i {
         color: #94A0B4 !important;
     }
+
     .el-menu-item:focus {
         border-color: rgba(230, 173, 59, 1) !important;
         @include linear-gradient(to left, rgba(0, 0, 0, 0) 0%, rgba(230, 173, 59, 1) 100%);
     }
+
     .el-menu-item:hover {
         outline: 0;
         @include linear-gradient(to left, rgba(0, 0, 0, 0) 0%, rgba(230, 173, 59, 1) 100%);
@@ -28,14 +32,17 @@
         border-bottom: rgba(230, 173, 59, 1) !important;
         background-color: #000 !important;
         color: #fff !important;
+
         i {
             color: #fff !important;
         }
     }
+
     .el-menu-item.is-active {
         border-bottom: rgba(230, 173, 59, 1) !important;
         font-weight: bold;
         color: #fff !important;
+
         i {
             font-weight: bold;
             color: #fff !important;
@@ -61,28 +68,28 @@
     color: #909399 !important;
 }
 
-.el-radio__input.is-checked .el-radio__inner{
+.el-radio__input.is-checked .el-radio__inner {
     border-color: rgba(52, 124, 179, 1) !important;
-    background-color: rgba(52, 124, 179, 1)  !important; 
+    background-color: rgba(52, 124, 179, 1) !important;
 }
 
-.el-radio__input.is-checked + .el-radio__label{
-    color: rgba(52, 124, 179, 1) !important;    
+.el-radio__input.is-checked+.el-radio__label {
+    color: rgba(52, 124, 179, 1) !important;
 }
 
-.el-button--primary{
+.el-button--primary {
     border-color: rgba(52, 124, 179, 1) !important;
-    background-color: rgba(52, 124, 179, 1)  !important; 
+    background-color: rgba(52, 124, 179, 1) !important;
 }
 
-.el-button--text{
-    color: rgba(52, 124, 179, 1) !important;    
+.el-button--text {
+    color: rgba(52, 124, 179, 1) !important;
 }
 
-.el-select-dropdown__item{
-    color: rgba(52, 124, 179, 1) !important; 
+.el-select-dropdown__item {
+    color: rgba(52, 124, 179, 1) !important;
 }
 
-.el-input__inner:focus{
-    border-color: rgba(52, 124, 179, 1) !important; 
+.el-input__inner:focus {
+    border-color: rgba(52, 124, 179, 1) !important;
 }

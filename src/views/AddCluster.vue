@@ -1,9 +1,8 @@
 <template>
   <div class="create-page">
-    <p class="create-page__title">创建集群</p>
+    <p class="create-page__title">Create Cluster</p>
     <div class="create-container">
       <el-form :model="clusterForm" :rules="rules" ref="clusterForm" label-width="120px">
-
         <el-form-item label="Name" prop="name" required>
           <el-input v-model="clusterForm.name"></el-input>
         </el-form-item>
@@ -16,8 +15,8 @@
                   v-for="item in memoryUnitOptions"
                   :key="item"
                   :label="item"
-                  :value="item">
-                </el-option>
+                  :value="item"
+                ></el-option>
               </el-select>
             </template>
           </el-input>
@@ -42,7 +41,7 @@
             </div>
             <i class="el-icon-info type-icon"></i>
           </el-tooltip>
-        </el-form-item> -->
+        </el-form-item>-->
 
         <el-form-item label="Version" prop="version" required>
           <el-radio-group v-model="clusterForm.version">
@@ -52,14 +51,16 @@
 
         <el-form-item label="Type" required>
           <el-radio-group v-model="clusterForm.spec">
-            <el-radio :label="item.value" v-for="(item, index) in specOptions" :key="index">{{ item.name }}</el-radio>
+            <el-radio
+              :label="item.value"
+              v-for="(item, index) in specOptions"
+              :key="index"
+            >{{ item.name }}</el-radio>
           </el-radio-group>
         </el-form-item>
 
         <el-form-item label="Specification" prop="spec" required>
-          <div v-if="clusterForm.spec !== 'custom'">
-            {{clusterForm.spec}}
-          </div>
+          <div v-if="clusterForm.spec !== 'custom'">{{clusterForm.spec}}</div>
           <div v-else class="custom-spec">
             <el-input v-model="specCustomForm.core" size="mini" type="number">
               <template slot="append">Core</template>
@@ -71,104 +72,134 @@
                     v-for="item in memoryUnitOptions"
                     :key="item"
                     :label="item"
-                    :value="item">
-                  </el-option>
+                    :value="item"
+                  ></el-option>
                 </el-select>
               </template>
             </el-input>
-            </div>
+          </div>
         </el-form-item>
 
         <el-form-item label="Group" required>
-          <el-select v-model="clusterForm.group" class="group-select" filterable placeholder="Please select the APPID to be correlated">
+          <el-select
+            v-model="clusterForm.group"
+            class="group-select"
+            filterable
+            placeholder="Please select the APPID to be correlated"
+          >
             <el-option
               v-for="item in groupOptions"
               :key="item.name"
               :label="item.name"
-              :value="item.value">
-            </el-option>
+              :value="item.value"
+            ></el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="APPID" prop="appids">
-          <el-select v-model="clusterForm.appids" class="appid-select" multiple filterable placeholder="Please select the APPID to be correlated" no-data-text="No data">
-            <el-option
-              v-for="item in appidOptions"
-              :key="item"
-              :label="item"
-              :value="item">
-            </el-option>
+          <el-select
+            v-model="clusterForm.appids"
+            class="appid-select"
+            multiple
+            filterable
+            placeholder="Please select the APPID to be correlated"
+            no-data-text="No data"
+          >
+            <el-option v-for="item in appidOptions" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item class="footer-item">
           <el-button @click="resetForm('clusterForm')">Reset</el-button>
-          <el-button type="primary" @click="submitForm('clusterForm')" :disabled="submitDisabled">Create</el-button>
+          <el-button
+            type="primary"
+            @click="submitForm('clusterForm')"
+            :disabled="submitDisabled"
+          >Create</el-button>
         </el-form-item>
       </el-form>
     </div>
-
   </div>
 </template>
 
 <script>
-import { getVersionsApi, createClusterApi, getAppidsApi } from '@/http/api'
-import { TYPE_OPTIONS, SPEC_OPTIONS, GROUP_OPTIONS } from '@/constants/CREATE_TYPES'
+import { getVersionsApi, createClusterApi, getAppidsApi } from "@/http/api";
+import {
+  TYPE_OPTIONS,
+  SPEC_OPTIONS,
+  GROUP_OPTIONS
+} from "@/constants/CREATE_TYPES";
 
 export default {
-  data () {
+  data() {
     const checkName = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('Please enter a name'))
+        callback(new Error("Please enter a name"));
       }
       if (!/^\w+$/.test(value)) {
-        callback(new Error('Only English characters, numbers and underscores_ are supported'))
+        callback(
+          new Error(
+            "Only English characters, numbers and underscores_ are supported"
+          )
+        );
       }
-      callback()
-    }
+      callback();
+    };
     const checkTotalMemory = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('Please enter the total capacity'))
+        callback(new Error("Please enter the total capacity"));
       }
       if (value <= 0) {
-        callback(new Error('Please enter a value greater than 0'))
+        callback(new Error("Please enter a value greater than 0"));
       }
-      callback()
-    }
+      callback();
+    };
     const checCustomSpec = (rule, value, callback) => {
-      if (value === 'custom' && (!this.specCustomForm.core || !this.specCustomForm.memory)) {
-        callback(new Error('Please enter specification'))
+      if (
+        value === "custom" &&
+        (!this.specCustomForm.core || !this.specCustomForm.memory)
+      ) {
+        callback(new Error("Please enter specification"));
       }
-      if (value === 'custom' && (this.specCustomForm.core <= 0 || this.specCustomForm.memory <= 0)) {
-        callback(new Error('Please enter a value greater than 0'))
+      if (
+        value === "custom" &&
+        (this.specCustomForm.core <= 0 || this.specCustomForm.memory <= 0)
+      ) {
+        callback(new Error("Please enter a value greater than 0"));
       }
-      callback()
-    }
+      callback();
+    };
     return {
-      memoryUnit: 'G',
-      specMemoryUnit: 'G',
-      memoryUnitOptions: ['G', 'M'],
+      memoryUnit: "G",
+      specMemoryUnit: "G",
+      memoryUnitOptions: ["G", "M"],
       rules: {
-        name: [{
-          validator: checkName,
-          trigger: 'change'
-        }],
-        total_memory: [{
-          validator: checkTotalMemory,
-          trigger: 'change'
-        }],
-        spec: [{
-          validator: checCustomSpec,
-          trigger: 'change'
-        }]
+        name: [
+          {
+            validator: checkName,
+            trigger: "change"
+          }
+        ],
+        total_memory: [
+          {
+            validator: checkTotalMemory,
+            trigger: "change"
+          }
+        ],
+        spec: [
+          {
+            validator: checCustomSpec,
+            trigger: "change"
+          }
+        ]
       },
       clusterForm: {
         name: null,
-        cache_type: 'redis_cluster',
-        spec: '0.25c2g',
+        cache_type: "redis_cluster",
+        spec: "0.25c2g",
         total_memory: null,
         version: null,
-        group: 'sh001',
+        group: "sh001",
         appids: []
       },
       typeOptions: TYPE_OPTIONS,
@@ -182,81 +213,93 @@ export default {
       },
       appidOptions: [],
       submitDisabled: false
-    }
+    };
   },
-  created () {
-    this.getAppids()
-    this.getVersions()
+  created() {
+    this.getAppids();
+    this.getVersions();
   },
   methods: {
-    async getAppids () {
+    async getAppids() {
       try {
         const { data } = await getAppidsApi({
-          format: 'plain'
-        })
-        this.appidOptions = data.items
+          format: "plain"
+        });
+        this.appidOptions = data.items;
       } catch (_) {
-        this.$message.error('Fail to get AppId list')
+        this.$message.error("Fail to get AppId list");
       }
     },
-    typeChange () {
-      this.clusterForm.version = null
-      this.versionOptions = []
-      this.versionOptions = this.allVersionOptions.find(item => item.cache_type === this.clusterForm.cache_type).versions
-      this.clusterForm.version = this.versionOptions[0]
+    typeChange() {
+      this.clusterForm.version = null;
+      this.versionOptions = [];
+      this.versionOptions = this.allVersionOptions.find(
+        item => item.cache_type === this.clusterForm.cache_type
+      ).versions;
+      this.clusterForm.version = this.versionOptions[0];
     },
-    async getVersions () {
+    async getVersions() {
       try {
-        const { data } = await getVersionsApi()
-        this.allVersionOptions = data.items
-        this.versionOptions = this.allVersionOptions.find(item => item.cache_type === this.clusterForm.cache_type).versions
-        this.clusterForm.version = this.versionOptions[0]
+        const { data } = await getVersionsApi();
+        this.allVersionOptions = data.items;
+        this.versionOptions = this.allVersionOptions.find(
+          item => item.cache_type === this.clusterForm.cache_type
+        ).versions;
+        this.clusterForm.version = this.versionOptions[0];
       } catch (_) {
-        this.$message.error('Fail to get version list')
+        this.$message.error("Fail to get version list");
       }
     },
-    submitForm (formName) {
-      this.$refs[formName].validate((valid) => {
+    submitForm(formName) {
+      this.$refs[formName].validate(valid => {
         if (valid) {
-          this.onSubmit()
+          this.onSubmit();
         } else {
-          return false
+          return false;
         }
-      })
+      });
     },
-    resetForm (formName) {
-      this.$refs[formName].resetFields()
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
       // this.clusterForm.spec = null
-      this.clusterForm.version = this.versionOptions[0]
-      this.memoryUnit = 'G'
-      this.specMemoryUnit = 'G'
+      this.clusterForm.version = this.versionOptions[0];
+      this.memoryUnit = "G";
+      this.specMemoryUnit = "G";
     },
-    async onSubmit () {
-      let params = JSON.parse(JSON.stringify(this.clusterForm))
-      params.total_memory = this.memoryUnit === 'G' ? Number(params.total_memory) * 1024 : Number(params.total_memory)
-      if (params.spec === 'custom') {
-        params.spec = `${this.specCustomForm.core}c${this.specCustomForm.memory}${this.specMemoryUnit === 'G' ? 'g' : 'm'}`
+    async onSubmit() {
+      let params = JSON.parse(JSON.stringify(this.clusterForm));
+      params.total_memory =
+        this.memoryUnit === "G"
+          ? Number(params.total_memory) * 1024
+          : Number(params.total_memory);
+      if (params.spec === "custom") {
+        params.spec = `${this.specCustomForm.core}c${
+          this.specCustomForm.memory
+        }${this.specMemoryUnit === "G" ? "g" : "m"}`;
       }
-      this.submitDisabled = true
+      this.submitDisabled = true;
       try {
-        await createClusterApi(params)
-        this.$message.success('Creating，please wait')
+        await createClusterApi(params);
+        this.$message.success("Creating，please wait");
         setTimeout(() => {
-          this.$router.push({ name: 'cluster', params: { name: this.clusterForm.name } })
-        }, 3000)
+          this.$router.push({
+            name: "cluster",
+            params: { name: this.clusterForm.name }
+          });
+        }, 3000);
       } catch ({ error }) {
-        this.$message.error(`Fail to create：${error}`)
+        this.$message.error(`Fail to create：${error}`);
       }
-      this.submitDisabled = false
+      this.submitDisabled = false;
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-@import '@/style/mixin.scss';
+@import "@/style/mixin.scss";
 $edit-icon-color: #1890ff;
-$green-color: #67C23A;
+$green-color: #67c23a;
 
 .create-page__title {
   @include page-title-font;

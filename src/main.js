@@ -7,10 +7,13 @@ import '@/style/element-variables.scss'
 
 Vue.config.productionTip = false
 
-Vue.use(ElementUI, { size: 'small', zIndex: 3000 })
+Vue.use(ElementUI, {
+  size: 'small',
+  zIndex: 3000
+})
 
 new Vue({
-    router,
-    store,
-    render: h => h(App)
+  router,
+  store,
+  render: h => h(App)
 }).$mount('#app')

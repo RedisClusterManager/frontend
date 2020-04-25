@@ -26,7 +26,7 @@ export default {
     SideBar
   },
   created() {
-    if (auth.isLogin()) this.$router.push("/appid")
+    if (auth.isLogin()) this.$router.push("/appid");
   }
 };
 </script>
@@ -53,7 +53,7 @@ $backgroud-color: #f8fafc;
   overflow-x: hidden;
   & > div:last-child {
     padding: 24px;
-  };
+  }
   // background-color: rgb(34, 34, 34) !important;
 }
 </style>
