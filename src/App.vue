@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <SideBar />
+    <SideBar v-if="isLogin==true" />
+    <Header v-if="isLogin" />
     <div class="layout">
-      <Header />
       <transition class="transition" name="slide-fade" mode="out-in" appear>
         <router-view />
       </transition>
@@ -16,17 +16,33 @@ import SideBar from '@/components/layout/SideBar.vue'
 import auth from '@/utils/auth'
 
 export default {
+  name: 'App',
+  components: {
+    SideBar,
+    Header
+  },
   data () {
     return {
-      status: ''
+      isLogin: false,
+      isRouterAlive: true
     }
   },
-  components: {
-    Header,
-    SideBar
+  // 监听器
+  watch: {
+    // 方法1
+    $route (to, from) {
+      // 监听路由是否变化
+      // console.log(999)
+      if (to.path === '/') {
+        // 跳转到哪个页面
+        location.reload()
+      }
+    }
   },
   created () {
-    if (auth.isLogin()) this.$router.push('/appid')
+    this.isLogin = auth.isLogin()
+    if (this.isLogin === false) this.$router.push('/login')
+    else this.$router.push('/home')
   }
 }
 </script>

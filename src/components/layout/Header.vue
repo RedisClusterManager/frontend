@@ -1,13 +1,28 @@
 <template>
   <div class="header">
-    <el-button class="header__logout">Log Out</el-button>
-    <p class="header__user">Hello, QvQ</p>
+    <el-button class="header__logout" @click="logout">Log Out</el-button>
+    <p class="header__user">Hello, {{username}}</p>
   </div>
 </template>
 
 <script>
+import auth from '@/utils/auth.js'
 export default {
-  name: 'Header'
+  name: 'Header',
+  data: function () {
+    return {
+      username: ''
+    }
+  },
+  created () {
+    this.username = auth.getUser().name
+  },
+  methods: {
+    logout () {
+      auth.removeUser()
+      this.$router.push('/')
+    }
+  }
 }
 </script>
 
@@ -20,12 +35,13 @@ export default {
   flex-direction: row-reverse;
   flex-shrink: 0;
   background-color: rgba(230, 173, 59, 1);
-  font-size: 15px;
   &__user {
+    font-size: 15px;
     padding: 0 20px;
     color: white;
   }
   &__logout {
+    font-size: 15px;
     background: inherit;
     border: inherit;
     height: inherit;

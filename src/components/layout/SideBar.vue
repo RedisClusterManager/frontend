@@ -9,7 +9,7 @@
       <div class="side-bar__title">
         <h1>Redis Cluster Manage</h1>
       </div>
-      <el-menu-item index="/">
+      <el-menu-item index="/home">
         <i class="el-icon-menu"></i>
         <span slot="title">Homepage</span>
       </el-menu-item>
