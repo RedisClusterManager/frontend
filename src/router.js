@@ -1,13 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './components/views/Home.vue'
-import Login from './components/views/Login.vue'
+import Home from '@/components/views/Home.vue'
+import Login from '@/components/views/Login.vue'
 
 Vue.use(Router)
 
 export default new Router({
   mode: 'history',
-  base: process.env.VUE_APP_BASE_URL,
+  base: process.env.BASE_URL,
   routes: [{
     path: '/',
     name: 'root'
@@ -29,7 +29,7 @@ export default new Router({
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-        import(/* webpackChunkName: "about" */ './components/views/Register.vue')
+        import(/* webpackChunkName: "Register" */ '@/components/views/Register.vue')
   },
   {
     path: '/appid',
@@ -38,7 +38,7 @@ export default new Router({
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-        import(/* webpackChunkName: "about" */ './components/views/AppId.vue')
+        import(/* webpackChunkName: "AppId" */ '@/components/views/AppId.vue')
   },
   {
     path: '/cluster/:name',
@@ -47,7 +47,7 @@ export default new Router({
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-        import(/* webpackChunkName: "about" */ './components/views/Cluster.vue')
+        import(/* webpackChunkName: "Cluster" */ '@/components/views/Cluster.vue')
   },
   {
     path: '/job',
@@ -56,7 +56,7 @@ export default new Router({
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-        import(/* webpackChunkName: "about" */ './components/views/Job.vue')
+        import(/* webpackChunkName: "Job" */ '@/components/views/Job.vue')
   },
   {
     path: '/add',
@@ -65,7 +65,7 @@ export default new Router({
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-        import(/* webpackChunkName: "about" */ './components/views/AddCluster.vue')
+        import(/* webpackChunkName: "AddCluster" */ '@/components/views/AddCluster.vue')
   }
   ]
 })

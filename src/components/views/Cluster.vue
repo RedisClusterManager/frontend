@@ -2,13 +2,13 @@
   <div class="cluster-page">
     <el-breadcrumb separator="/" class="breadcrumb">
       <el-breadcrumb-item>
-        <a href="#" @click="$router.back()">back</a>
+        <a href="#" @click="$router.back()"><i class="el-icon-back"></i></a>
       </el-breadcrumb-item>
       <el-breadcrumb-item>{{ clusterData.name }}</el-breadcrumb-item>
     </el-breadcrumb>
     <div v-loading="loading" class="cluster-panel">
       <div class="cluster-header">
-        <span class="cluster-header__title">cluster info</span>
+        <span class="cluster-header__title">Cluster Info</span>
         <el-tag :type="statusMap[clusterData.status]">
           <i v-if="clusterData.status === 'waiting'" class="el-icon-loading"></i>
           {{ clusterData.status }}
@@ -26,7 +26,7 @@
           </p>
           <p>
             Total Capacity:
-            <span>{{ clusterData.max_memory * clusterData.number || '--' }} MB</span>
+            <span>{{ clusterData.max_memory * (clusterData.mNumber + clusterData.sNumber) || '--' }} MB</span>
           </p>
           <p>
             Front-end Port:
@@ -40,11 +40,11 @@
           </p>
           <p>
             Number of Master Nodes:
-            <span>{{ clusterData.number }}</span>
+            <span>{{ clusterData.mNumber }}</span>
           </p>
           <p>
             Number of Slave Nodes:
-            <span>{{ clusterData.cache_type === 'redis_cluster' ? clusterData.number : 0 }}</span>
+            <span>{{ clusterData.sNumber }}</span>
           </p>
         </div>
         <div>
@@ -116,40 +116,7 @@
               <el-tag :type="row.role === 'master' ? 'warning' : 'info'">{{ row.role }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column v-if="clusterData.cache_type !== 'redis_cluster'" label="alias">
-            <template slot-scope="{ row }">{{ row.alias || '--' }}</template>
-          </el-table-column>
-          <el-table-column
-            v-if="clusterData.cache_type !== 'redis_cluster'"
-            label="weights(权重)"
-            width="150"
-          >
-            <template slot-scope="{ row, $index }">
-              <div v-if="row.weightInfo.type === 'view'" class="instance-weight-item">
-                {{ row.weight }}
-                <i
-                  v-if="clusterData.status !== 'waiting'"
-                  class="el-icon-edit-outline edit-weight-icon"
-                  @click="editInstanceWeight(row, $index)"
-                ></i>
-              </div>
-              <div v-if="row.weightInfo.type === 'edit'" class="instance-weight-item">
-                <el-input
-                  class="table-mini-input"
-                  :value="row.weightInfo.value"
-                  @input="updateInstance($event, $index)"
-                  placeholder="weight"
-                  size="mini"
-                  type="number"
-                ></el-input>
-                <i
-                  class="el-icon-success edit-weight-icon"
-                  @click="saveInstanceWeight(row, $index)"
-                ></i>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column prop="status" label="status" width="80">
+          <el-table-column prop="status" label="status" min-width="80">
             <template slot-scope="{ row }">
               <el-tag :type="statusMap[row.status]">
                 <i v-if="row.status === 'waiting'" class="el-icon-loading"></i>
@@ -159,11 +126,11 @@
           </el-table-column>
           <el-table-column label="operation" width="80">
             <template slot-scope="{ row }">
-              <el-button type="text" @click="restartInstance(row)">restart</el-button>
-              <!-- TODO(feature): -->
-              <!-- <el-button type="text" @click="linkToSetting(row)">开关</el-button>
-                <el-button type="text" @click="linkToSetting(row)">删除</el-button>
-              <el-button type="text" @click="linkToSetting(row)">监控</el-button>-->
+              <el-button type="text" style="margin-left:10px" @click="restartInstance(row)">restart</el-button>
+              <el-button v-if="row.status!=='waiting'" type="text" @click="linkToSetting(row)">stop</el-button>
+              <el-button v-else type="text" @click="linkToSetting(row)">start</el-button>
+              <el-button type="text" @click="linkToSetting(row)">delete</el-button>
+              <el-button type="text" @click="linkToSetting(row)">monitor</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -247,7 +214,31 @@ export default {
       },
       timer: null,
       deleteClusterDialogVisible: false,
-      confirmClusterName: null
+      confirmClusterName: null,
+      // For Mannul Test Only
+      clusterData: {
+        name: 'name1',
+        group: 'sh001',
+        status: 'running',
+        cache_type: 'redis_cluster',
+        max_memory: 2048,
+        mNumber: 1,
+        sNumber: 1,
+        front_end_port: '10086',
+        version: '0.0.1',
+        instances: [{
+          ip: '101.222.25.96',
+          port: '9001',
+          role: 'master',
+          status: 'running'
+        },
+        {
+          ip: '101.222.25.96',
+          port: '9002',
+          role: 'slave',
+          status: 'waiting'
+        }]
+      }
     }
   },
   computed: {
@@ -321,7 +312,7 @@ export default {
     async restartInstance ({ ip, port }) {
       try {
         await restartInstanceApi(this.clusterData.name, `${ip}:${port}`)
-        this.$message.success('Successful restart')
+        this.$message.success('Successfully restart')
       } catch ({ error }) {
         this.$message.error(`Failed to restart: ${error}`)
       }

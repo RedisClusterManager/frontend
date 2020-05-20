@@ -29,6 +29,7 @@
 <script>
 import auth from '@/utils/auth.js'
 export default {
+  name: 'Login',
   data: function () {
     return {
       isSignUp: false,

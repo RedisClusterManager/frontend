@@ -2,7 +2,7 @@
   <div>
     <div class="appid-container">
       <div class="appid-tree">
-        <el-input placeholder="输入关键字进行过滤" clearable v-model="filterText"></el-input>
+        <el-input placeholder="Enter keyword to filter" clearable v-model="filterText"></el-input>
 
         <el-tree
           v-loading="appidLoading"
@@ -27,12 +27,12 @@
           <div class="appid-group__title">{{ GROUP_MAP[groupItem.group] }}</div>
           <el-table :data="groupItem.clusters" border max-height="500">
             <el-table-column prop="name" label="Cluster Name" min-width="100"></el-table-column>
-            <el-table-column prop="cache_type" label="Cache Type" min-width="90"></el-table-column>
+            <el-table-column prop="cache_type" label="Cache Type" min-width="70"></el-table-column>
             <el-table-column prop="front_end_port" label="Front-end Port"></el-table-column>
             <el-table-column prop="max_memory" label="Total Capacity">
               <template slot-scope="{ row }">{{ row.max_memory }} MB</template>
             </el-table-column>
-            <el-table-column prop="number" label="Number of Nodes" min-width="70"></el-table-column>
+            <el-table-column prop="number" label="Number of Nodes" min-width="80"></el-table-column>
             <el-table-column label="Detail" min-width="135">
               <template slot-scope="{ row }">
                 <el-button type="text" @click="removeCorrelation(row)">Remove Correlation</el-button>
@@ -50,7 +50,7 @@
     </div>
 
     <el-dialog
-      title="Add Correlate"
+      title="Add Correlation"
       :visible.sync="dialogVisible"
       width="600px"
       custom-class="correlation-dialog"
@@ -66,7 +66,7 @@
         <el-table-column prop="group" label="Group">
           <template slot-scope="{ row }">{{ GROUP_MAP[row.group] }}</template>
         </el-table-column>
-        <el-table-column label="详情" width="230">
+        <el-table-column label="Detail" width="230">
           <template slot-scope="{ row }">
             <el-button type="text" @click="addCorrelation(row)">Correlate to {{ appid }}</el-button>
           </template>
@@ -112,13 +112,64 @@ export default {
     return {
       GROUP_MAP,
       filterText: null,
-      appidTree: [],
+      appidTree: [
+        {
+          label: '*China',
+          children: [
+            {
+              label: '*AP1'
+            },
+            {
+              label: '*Ap2'
+            }
+          ]
+        },
+        {
+          label: '*US',
+          children: [
+            {
+              label: '*NYC'
+            }
+          ]
+        }
+      ],
       defaultProps: {
         children: 'children',
         label: 'label'
       },
-      appid: null,
-      groupedClusters: [],
+      appid: '*AP1',
+      groupedClusters: [{
+        group: 'sh001',
+        clusters: [{
+          name: 'name1',
+          cache_type: 'redis_cluster',
+          front_end_port: '10086',
+          max_memory: '4096',
+          number: '2'
+        }, {
+          name: 'name2',
+          cache_type: 'redis_cluster',
+          front_end_port: '10000',
+          max_memory: '8192',
+          number: '3'
+        }]
+      },
+      {
+        group: 'sh002',
+        clusters: [{
+          name: 'name3',
+          cache_type: 'redis_cluster',
+          front_end_port: '10087',
+          max_memory: '4096',
+          number: '2'
+        }, {
+          name: 'name4',
+          cache_type: 'redis_cluster',
+          front_end_port: '10001',
+          max_memory: '8192',
+          number: '3'
+        }]
+      }],
       appidLoading: false,
       clusterLoading: false,
       // dialog
@@ -129,7 +180,20 @@ export default {
       appidForm: {
         department: null,
         service: null
-      }
+      },
+
+      clusterList: [{
+        name: 'name5',
+        group: 'sh001'
+      },
+      {
+        name: 'name6',
+        group: 'sh002'
+      },
+      {
+        name: 'name7',
+        group: 'bj001'
+      }]
     }
   },
   created () {
@@ -188,7 +252,7 @@ export default {
     },
     removeCorrelation ({ id, name }) {
       this.$confirm(
-        `You will disassociate the cluster [${name}] and AppId [${this.appid}], are you sure to continue?`,
+        `You will disassociate the cluster [${name}] with AppId [${this.appid}], are you sure to continue?`,
         'Remove',
         {
           confirmButtonText: 'Confirm',

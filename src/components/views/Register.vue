@@ -63,6 +63,7 @@ const validatePass1 = (rule, value, callback) => {
   callback()
 }
 export default {
+  name: 'Resgister',
   data: function () {
     var validatePass2 = (rule, value, callback) => {
       if (value === '') {
@@ -108,7 +109,7 @@ export default {
       }
     },
     toLogIn () {
-        this.$router.push('/login')
+      this.$router.push('/login')
     }
   }
 }

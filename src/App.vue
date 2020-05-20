@@ -29,7 +29,6 @@ export default {
   },
   // 监听器
   watch: {
-    // 方法1
     $route (to, from) {
       // 监听路由是否变化
       // console.log(999)
