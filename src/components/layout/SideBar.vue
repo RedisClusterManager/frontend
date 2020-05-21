@@ -17,10 +17,6 @@
         <i class="el-icon-document"></i>
         <span slot="title">AppId List</span>
       </el-menu-item>
-      <!-- <el-menu-item index="/job">
-        <i class="el-icon-time"></i>
-        <span slot="title">Job List</span>
-      </el-menu-item> -->
       <el-menu-item index="/add">
         <i class="el-icon-circle-plus-outline"></i>
         <span slot="title">Add Cluster</span>

@@ -13,12 +13,6 @@ const getAppidsApi = params => {
     params
   })
 }
-
-// 获取 job 列表
-const getJobsApi = params => {
-  return request.get('api/jobs')
-}
-
 // 获取 version
 const getVersionsApi = params => {
   return request.get('api/versions')
@@ -29,7 +23,7 @@ const getAppidDetailApi = params => {
   return request.get(`api/appids/${params}`)
 }
 
-// 获取 appid 详情
+// 获取 cluster 详情
 const getClusterDetailApi = params => {
   return request.get(`api/clusters/${params}`)
 }
@@ -74,7 +68,6 @@ const restartInstanceApi = (clusterName, instance) => {
 export {
   getClusterListByQueryApi,
   getAppidsApi,
-  getJobsApi,
   getVersionsApi,
   getAppidDetailApi,
   getClusterDetailApi,

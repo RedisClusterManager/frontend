@@ -6,7 +6,6 @@ import Register from '@/components/views/Register.vue'
 import Home from '@/components/views/Home.vue'
 import AppId from '@/components/views/AppId.vue'
 import Cluster from '@/components/views/Cluster.vue'
-import Job from '@/components/views/Job.vue'
 import AddCluster from '@/components/views/AddCluster.vue'
 import routes from "@/routes.js"
 const localVue = createLocalVue()

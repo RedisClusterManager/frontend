@@ -50,15 +50,6 @@ export default new Router({
         import(/* webpackChunkName: "Cluster" */ '@/components/views/Cluster.vue')
   },
   {
-    path: '/job',
-    name: 'job',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-        import(/* webpackChunkName: "Job" */ '@/components/views/Job.vue')
-  },
-  {
     path: '/add',
     name: 'add',
     // route level code-splitting
