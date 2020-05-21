@@ -11,6 +11,7 @@
           <el-input
             type="password"
             placeholder="password"
+            ref="password"
             prefix-icon="el-icon-lock"
             v-model="param.password"
           ></el-input>
@@ -68,7 +69,7 @@ export default {
     var validatePass2 = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('Please reenter password'))
-      } else if (value !== this.$refs.repassword) {
+      } else if (this.$refs.password.value !== this.$refs.repassword.value) {
         callback(new Error('Password different'))
       } else {
         callback()
@@ -98,14 +99,11 @@ export default {
     }
   },
   methods: {
-    async submit () {
+    async register () {
       if (this.param.username) {
         this.$message.success('Successfully log in')
-        await auth.setUser('123', '123')
+        await auth.setUser(this.param.password, this.param.username)
         this.$router.push('/')
-      } else {
-        this.$message.error('Please check your user name and password')
-        return false
       }
     },
     toLogIn () {

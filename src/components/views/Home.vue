@@ -18,7 +18,6 @@
       <div v-if="clusterList.length" class="search-result">
         <el-table :data="clusterList" border max-height="500">
           <el-table-column prop="name" label="Cluster Name" min-width="100"></el-table-column>
-          <el-table-column prop="cache_type" label="Cache Type"></el-table-column>
           <el-table-column prop="front_end_port" label="Front-end Port"></el-table-column>
           <el-table-column prop="max_memory" label="Total Capacity">
             <template slot-scope="{ row }">{{ row.max_memory }} MB</template>
@@ -45,7 +44,30 @@ export default {
   name: 'home',
   data () {
     return {
-      clusterKeyword: null
+      clusterKeyword: null,
+      // For Mannul Test Only
+      clusterList: [],
+      testClusterList: [{
+        name: 'name1',
+        front_end_port: '10086',
+        max_memory: '4096',
+        number: '2'
+      }, {
+        name: 'name2',
+        front_end_port: '10000',
+        max_memory: '8192',
+        number: '3'
+      }, {
+        name: 'name3',
+        front_end_port: '10087',
+        max_memory: '4096',
+        number: '2'
+      }, {
+        name: 'name4',
+        front_end_port: '10001',
+        max_memory: '8192',
+        number: '3'
+      }]
     }
   },
   created () {
@@ -62,7 +84,10 @@ export default {
       this.loadClusterData()
     }, 1000),
     async loadClusterData () {
-      if (!this.clusterKeyword) return
+      if (!this.clusterKeyword) {
+        this.clusterList = []
+        return
+      }
       this.$store.dispatch('clusters/getClusterResult', {
         name: this.clusterKeyword
       })
@@ -70,6 +95,8 @@ export default {
         name: 'home',
         query: { key: this.clusterKeyword }
       })
+      // Test Only
+      this.clusterList = this.testClusterList
     },
     linkToClusterDetail ({ name }) {
       this.$router.push({ name: 'cluster', params: { name } })

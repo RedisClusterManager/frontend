@@ -39,7 +39,7 @@ export default {
       },
       rules: {
         username: [
-          { required: true, message: 'Please enter user name', trigger: 'blur' }
+          { required: true, message: 'Please enter username', trigger: 'blur' }
         ],
         password: [
           { required: true, message: 'Please enter password', trigger: 'blur' }
@@ -51,10 +51,10 @@ export default {
     async submit () {
       if (this.param.username) {
         this.$message.success('Successfully log in')
-        await auth.setUser('123', '123')
+        await auth.setUser(this.param.password, this.param.username)
         this.$router.push('/')
       } else {
-        this.$message.error('Please check your user name and password')
+        this.$message.error('Please check your username or password')
         return false
       }
     },

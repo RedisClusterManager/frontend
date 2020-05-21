@@ -21,10 +21,6 @@
             <span class="cluster-info__name">{{ clusterData.name }}</span>
           </p>
           <p>
-            Type:
-            <span>{{ clusterData.cache_type || '--' }}</span>
-          </p>
-          <p>
             Total Capacity:
             <span>{{ clusterData.max_memory * (clusterData.mNumber + clusterData.sNumber) || '--' }} MB</span>
           </p>
@@ -81,6 +77,7 @@
     <div v-loading="loading" class="cluster-panel">
       <div class="cluster-header">
         <span class="cluster-header__title">Node List</span>
+        <el-button type="text" @click="linkToSetting(row)"><i class="el-icon-circle-plus-outline"></i></el-button>
       </div>
       <div class="cluster-instances">
         <!-- TODO(feature) -->
@@ -107,7 +104,6 @@
           </el-table-column>
           <el-table-column prop="port" label="port" min-width="80"></el-table-column>
           <el-table-column
-            v-if="clusterData.cache_type === 'redis_cluster'"
             prop="role"
             label="role"
             min-width="80"
@@ -220,7 +216,6 @@ export default {
         name: 'name1',
         group: 'sh001',
         status: 'running',
-        cache_type: 'redis_cluster',
         max_memory: 2048,
         mNumber: 1,
         sNumber: 1,
@@ -237,7 +232,11 @@ export default {
           port: '9002',
           role: 'slave',
           status: 'waiting'
-        }]
+        }],
+        appids: [
+          '*AP1',
+          '*AP2'
+        ]
       }
     }
   },

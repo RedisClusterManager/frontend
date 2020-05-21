@@ -19,7 +19,7 @@ const getJobsApi = params => {
   return request.get('api/jobs')
 }
 
-// 获取 version 列表
+// 获取 version
 const getVersionsApi = params => {
   return request.get('api/versions')
 }

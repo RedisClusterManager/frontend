@@ -27,7 +27,6 @@
           <div class="appid-group__title">{{ GROUP_MAP[groupItem.group] }}</div>
           <el-table :data="groupItem.clusters" border max-height="500">
             <el-table-column prop="name" label="Cluster Name" min-width="100"></el-table-column>
-            <el-table-column prop="cache_type" label="Cache Type" min-width="70"></el-table-column>
             <el-table-column prop="front_end_port" label="Front-end Port"></el-table-column>
             <el-table-column prop="max_memory" label="Total Capacity">
               <template slot-scope="{ row }">{{ row.max_memory }} MB</template>
@@ -142,13 +141,11 @@ export default {
         group: 'sh001',
         clusters: [{
           name: 'name1',
-          cache_type: 'redis_cluster',
           front_end_port: '10086',
           max_memory: '4096',
           number: '2'
         }, {
           name: 'name2',
-          cache_type: 'redis_cluster',
           front_end_port: '10000',
           max_memory: '8192',
           number: '3'
@@ -158,13 +155,11 @@ export default {
         group: 'sh002',
         clusters: [{
           name: 'name3',
-          cache_type: 'redis_cluster',
           front_end_port: '10087',
           max_memory: '4096',
           number: '2'
         }, {
           name: 'name4',
-          cache_type: 'redis_cluster',
           front_end_port: '10001',
           max_memory: '8192',
           number: '3'
@@ -247,7 +242,8 @@ export default {
     },
     handleNodeClick (data) {
       if (!data.children) {
-        this.getClusterList(data.name)
+        this.appid = data.label
+        this.getClusterList(data.label)
       }
     },
     removeCorrelation ({ id, name }) {

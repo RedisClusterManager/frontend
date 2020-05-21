@@ -1,15 +1,3 @@
-// 集群类型
-const TYPE_OPTIONS = [{
-  name: 'Redis Cluster',
-  value: 'redis_cluster'
-}, {
-  name: 'Redis',
-  value: 'redis'
-}, {
-  name: 'Memcache',
-  value: 'memcache'
-}]
-
 // 集群型号
 const SPEC_OPTIONS = [{
   name: 'small',
@@ -26,8 +14,24 @@ const SPEC_OPTIONS = [{
 }]
 
 const GROUP_OPTIONS = [{
-  name: 'Shanghai',
+  name: 'Shanghai 001',
   value: 'sh001'
-}]
+},
+{
+  name: 'Shanghai 002',
+  value: 'sh002'
+},
+{
+  name: 'Beijing 001',
+  value: 'bj001'
+},
+{
+  name: 'NYC 001',
+  value: 'nyc001'
+}
+]
 
-export { TYPE_OPTIONS, SPEC_OPTIONS, GROUP_OPTIONS }
+export {
+  SPEC_OPTIONS,
+  GROUP_OPTIONS
+}

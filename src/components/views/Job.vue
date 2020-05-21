@@ -36,6 +36,10 @@ import VueJsonPretty from 'vue-json-pretty'
 import { mapState, mapGetters } from 'vuex'
 
 export default {
+  data () {
+    return {
+    }
+  },
   components: {
     VueJsonPretty
   },
