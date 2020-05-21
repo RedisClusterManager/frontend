@@ -40,14 +40,14 @@ const deleteClusterApi = (clusterName, params) => {
   return request.delete(`api/clusters/${clusterName}`)
 }
 
-// 更新集群节点权重
-const patchInstanceWeightApi = (clusterName, addr, params) => {
-  return request.patch(`api/clusters/${clusterName}/instances/${addr}`, params)
-}
-
 // 创建 cluster
 const createClusterApi = params => {
-  return request.post('api/clusters', params)
+  return request.post('api/clusters/create', params)
+}
+
+// 更新 cluster
+const updateClusterApi = (clusterName, params) => {
+  return request.post(`api/clusters/${clusterName}`, params)
 }
 
 // 添加 cluster 和 appid 关联
@@ -73,8 +73,8 @@ export {
   getClusterDetailApi,
   removeCorrelationApi,
   deleteClusterApi,
-  patchInstanceWeightApi,
   createClusterApi,
+  updateClusterApi,
   addCorrelationApi,
   addAppIdApi,
   restartInstanceApi

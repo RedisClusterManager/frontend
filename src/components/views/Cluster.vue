@@ -2,13 +2,21 @@
   <div class="cluster-page">
     <el-breadcrumb separator="/" class="breadcrumb">
       <el-breadcrumb-item>
-        <a href="#" @click="$router.back()"><i class="el-icon-back"></i></a>
+        <a href="#" @click="$router.back()">
+          <i class="el-icon-back"></i>
+        </a>
       </el-breadcrumb-item>
       <el-breadcrumb-item>{{ clusterData.name }}</el-breadcrumb-item>
     </el-breadcrumb>
     <div v-loading="loading" class="cluster-panel">
       <div class="cluster-header">
-        <span class="cluster-header__title">Cluster Info<el-button type="text" @click="linkToSetting(row)"><i class="el-icon-edit"></i></el-button></span>
+        <span class="cluster-header__title">
+          Cluster Info
+        <!-- TODO(feature) 编辑框-->
+          <el-button type="text" @click="linkToSetting(row)">
+            <i class="el-icon-edit"></i>
+          </el-button>
+        </span>
         <el-tag :type="statusMap[clusterData.status]">
           <i v-if="clusterData.status === 'waiting'" class="el-icon-loading"></i>
           {{ clusterData.status }}
@@ -65,16 +73,17 @@
       <div class="cluster-info">
         <div>
           <el-upload
-  class="upload-demo"
-  accept=".json"
-  ref="upload"
-  action="https://jsonplaceholder.typicode.com/posts/"
-  :auto-upload="false">
-        <el-button type="danger">Import</el-button>
+            class="upload-demo"
+            accept=".json"
+            ref="upload"
+            action="https://jsonplaceholder.typicode.com/posts/"
+            :auto-upload="false"
+          >
+            <el-button type="danger">Import</el-button>
           </el-upload>
         </div>
         <div>
-        <el-button type="primary" @click="exportJSON()">Export</el-button>
+          <el-button type="primary" @click="exportJSON()">Export</el-button>
         </div>
       </div>
     </div>
@@ -92,10 +101,12 @@
     <div v-loading="loading" class="cluster-panel">
       <div class="cluster-header">
         <span class="cluster-header__title">Node List</span>
-        <el-button type="text" @click="linkToSetting(row)"><i class="el-icon-circle-plus-outline"></i></el-button>
+        <el-button type="text" @click="linkToSetting(row)">
+          <i class="el-icon-circle-plus-outline"></i>
+        </el-button>
       </div>
       <div class="cluster-instances">
-        <!-- TODO(feature) -->
+        <!-- TODO(feature) 批量-->
         <!-- <div v-if="clusterData.instances && clusterData.instances.length" class="cluster-instances__header">
           <el-button type="primary" size="mini" plain>批量重启</el-button>
           <el-button type="success" size="mini" plain>批量启动</el-button>
@@ -108,7 +119,7 @@
           max-height="400"
           @selection-change="handleSelectionChange"
         >
-          <!-- TODO(feature): 二期开放 -->
+          <!-- TODO(feature) 批量-->
           <!-- <el-table-column
               type="selection"
               width="55">
@@ -118,11 +129,7 @@
             <template slot-scope="scope">{{ scope.row.ip }}</template>
           </el-table-column>
           <el-table-column prop="port" label="port" min-width="80"></el-table-column>
-          <el-table-column
-            prop="role"
-            label="role"
-            min-width="80"
-          >
+          <el-table-column prop="role" label="role" min-width="80">
             <template slot-scope="{ row }">
               <el-tag :type="row.role === 'master' ? 'warning' : 'info'">{{ row.role }}</el-tag>
             </template>
@@ -205,7 +212,6 @@
 
 <script>
 import {
-  patchInstanceWeightApi,
   deleteClusterApi,
   restartInstanceApi
 } from '@/utils/api'
@@ -237,22 +243,21 @@ export default {
         sNumber: 1,
         front_end_port: '10086',
         version: '0.0.1',
-        instances: [{
-          ip: '101.222.25.96',
-          port: '9001',
-          role: 'master',
-          status: 'running'
-        },
-        {
-          ip: '101.222.25.96',
-          port: '9002',
-          role: 'slave',
-          status: 'waiting'
-        }],
-        appids: [
-          '*AP1',
-          '*AP2'
-        ]
+        instances: [
+          {
+            ip: '101.222.25.96',
+            port: '9001',
+            role: 'master',
+            status: 'running'
+          },
+          {
+            ip: '101.222.25.96',
+            port: '9002',
+            role: 'slave',
+            status: 'waiting'
+          }
+        ],
+        appids: ['*AP1', '*AP2']
       }
     }
   },
@@ -275,8 +280,7 @@ export default {
     updateInstance (value, index) {
       this.$store.dispatch('clusters/updateInstance', {
         changeType: 'value',
-        index,
-        weightValue: value
+        index
       })
     },
     async getClusterData () {
@@ -292,34 +296,6 @@ export default {
     },
     handleSelectionChange (val) {
       this.multipleSelection = val
-    },
-    editInstanceWeight (item, index) {
-      this.$store.dispatch('clusters/updateInstance', {
-        changeType: 'display',
-        index,
-        item,
-        newType: 'edit'
-      })
-    },
-    async saveInstanceWeight (item, index) {
-      this.$store.dispatch('clusters/getClusterDetail', {
-        name: this.$route.params.name
-      })
-      const { weightInfo, ip, port } = item
-      try {
-        await patchInstanceWeightApi(this.clusterData.name, `${ip}:${port}`, {
-          weight: Number(weightInfo.value)
-        })
-        this.$store.dispatch('clusters/updateInstance', {
-          index,
-          item,
-          newType: 'view'
-        })
-        this.$message.success('Successfully modified')
-        this.getClusterData()
-      } catch ({ error }) {
-        this.$message.error(error)
-      }
     },
     async confirmDeleteCluster () {
       try {
