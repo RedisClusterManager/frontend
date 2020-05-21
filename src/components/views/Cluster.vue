@@ -8,7 +8,7 @@
     </el-breadcrumb>
     <div v-loading="loading" class="cluster-panel">
       <div class="cluster-header">
-        <span class="cluster-header__title">Cluster Info</span>
+        <span class="cluster-header__title">Cluster Info<el-button type="text" @click="linkToSetting(row)"><i class="el-icon-edit"></i></el-button></span>
         <el-tag :type="statusMap[clusterData.status]">
           <i v-if="clusterData.status === 'waiting'" class="el-icon-loading"></i>
           {{ clusterData.status }}
@@ -60,6 +60,21 @@
               <a target="_blank" :href="clusterData.monitor">Go</a>
             </span>
           </p>
+        </div>
+      </div>
+      <div class="cluster-info">
+        <div>
+          <el-upload
+  class="upload-demo"
+  accept=".json"
+  ref="upload"
+  action="https://jsonplaceholder.typicode.com/posts/"
+  :auto-upload="false">
+        <el-button type="danger">Import</el-button>
+          </el-upload>
+        </div>
+        <div>
+        <el-button type="primary" @click="exportJSON()">Export</el-button>
         </div>
       </div>
     </div>
@@ -194,6 +209,7 @@ import {
   deleteClusterApi,
   restartInstanceApi
 } from '@/utils/api'
+import FileSaver from 'file-saver'
 import GROUP_MAP from '@/constants/GROUP'
 import { mapState } from 'vuex'
 
@@ -250,6 +266,12 @@ export default {
     this.getClusterData()
   },
   methods: {
+    exportJSON () {
+      // 将json转换成字符串
+      const data = JSON.stringify(this.clusterData)
+      const blob = new Blob([data], { type: '' })
+      FileSaver.saveAs(blob, this.clusterData.name + '.json')
+    },
     updateInstance (value, index) {
       this.$store.dispatch('clusters/updateInstance', {
         changeType: 'value',

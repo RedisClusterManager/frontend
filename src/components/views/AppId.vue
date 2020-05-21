@@ -32,6 +32,14 @@
               <template slot-scope="{ row }">{{ row.max_memory }} MB</template>
             </el-table-column>
             <el-table-column prop="number" label="Number of Nodes" min-width="80"></el-table-column>
+            <el-table-column prop="status" label="status" min-width="80">
+            <template slot-scope="{ row }">
+              <el-tag :type="statusMap[row.status]">
+                <i v-if="row.status === 'waiting'" class="el-icon-loading"></i>
+                {{ row.status }}
+              </el-tag>
+            </template>
+          </el-table-column>
             <el-table-column label="Detail" min-width="135">
               <template slot-scope="{ row }">
                 <el-button type="text" @click="removeCorrelation(row)">Remove Correlation</el-button>
@@ -65,6 +73,7 @@
         <el-table-column prop="group" label="Group">
           <template slot-scope="{ row }">{{ GROUP_MAP[row.group] }}</template>
         </el-table-column>
+         <el-table-column prop="status" label="Status" width="80"></el-table-column>
         <el-table-column label="Detail" width="230">
           <template slot-scope="{ row }">
             <el-button type="text" @click="addCorrelation(row)">Correlate to {{ appid }}</el-button>
@@ -109,6 +118,11 @@ import { throttle } from 'lodash'
 export default {
   data () {
     return {
+      statusMap: {
+        running: 'success',
+        waiting: 'warning',
+        error: 'danger'
+      },
       GROUP_MAP,
       filterText: null,
       appidTree: [
@@ -143,12 +157,14 @@ export default {
           name: 'name1',
           front_end_port: '10086',
           max_memory: '4096',
-          number: '2'
+          number: '2',
+          status: 'running'
         }, {
           name: 'name2',
           front_end_port: '10000',
           max_memory: '8192',
-          number: '3'
+          number: '3',
+          status: 'error'
         }]
       },
       {
@@ -157,12 +173,14 @@ export default {
           name: 'name3',
           front_end_port: '10087',
           max_memory: '4096',
-          number: '2'
+          number: '2',
+          status: 'error'
         }, {
           name: 'name4',
           front_end_port: '10001',
           max_memory: '8192',
-          number: '3'
+          number: '3',
+          status: 'error'
         }]
       }],
       appidLoading: false,

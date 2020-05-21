@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "element-ui": "^2.4.11",
+    "file-saver": "^2.0.2",
     "js-cookie": "^2.2.1",
     "lodash": "^4.17.14",
     "vue": "^2.5.17",
