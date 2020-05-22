@@ -1,12 +1,3 @@
-# web
-
-## ToDo
-
-* User Account
-
-* Import infomation？How to import？
-* Monitor
-
 ## Project setup
 ```
 yarn install
@@ -14,7 +5,7 @@ yarn install
 
 ### Compiles and hot-reloads for development
 ```
-yarn run serve
+yarn run dev/serve
 ```
 
 ### Compiles and minifies for production
